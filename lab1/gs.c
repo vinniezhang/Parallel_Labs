@@ -220,8 +220,8 @@ last_index = first_index + count;
 // do this while the rel error is not <= the given rel error
 while (complete == 0){ 
 
-	local_complete = 1; // an iteration has completed
 	nit += 1; // iteration count increments
+	local_complete = 1; // an iteration has completed
 
 	MPI_Barrier(MPI_COMM_WORLD);
 
