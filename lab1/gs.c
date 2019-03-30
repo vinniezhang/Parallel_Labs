@@ -195,14 +195,14 @@ int main(int argc, char *argv[])
  MPI_Init(&argc, &argv); // initializing with given arguments
  MPI_Comm_size(MPI_COMM_WORLD, &comm_sz); // determines size of the group (# of processes)
  MPI_Comm_rank(MPI_COMM_WORLD, &my_rank); // determines rank of the calling process in the communicator
- 
-// double start, finish; // local start and finish times of processes
-// double overhead = 0; // for tracking overhead time
-// double begin, end; // used to calculate overhead time
 
 // variable declarations for later equation calculation
  int quotient = num / comm_sz; // unknowns / processes
  int remainder = num % comm_sz;
+
+// double start, finish; // local start and finish times of processes
+// double overhead = 0; // for tracking overhead time
+// double begin, end; // used to calculate overhead time
 
  if (my_rank < remainder) {
  	count = quotient++;
@@ -219,8 +219,8 @@ last_index = first_index + count;
 // do this while the rel error is not <= the given rel error
 while (complete == 0){ 
 
-	nit += 1; // iteration count increments
 	local_complete = 1; // an iteration has completed
+	nit += 1; // iteration count increments
 
 	MPI_Barrier(MPI_COMM_WORLD);
 
