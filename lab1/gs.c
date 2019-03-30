@@ -256,7 +256,6 @@ while (complete == 0){
 	}
 
 	MPI_Barrier(MPI_COMM_WORLD);
- 	MPI_Finalize();
 
 }
 
@@ -276,6 +275,8 @@ while (complete == 0){
  printf("total number of iterations: %d\n", nit);
  
  fclose(fp);
+
+ MPI_Finalize();
  
  exit(0);
 
