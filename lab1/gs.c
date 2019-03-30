@@ -223,7 +223,7 @@ while (complete == 0){
 	nit += 1; // iteration count increments
 	local_complete = 1; // an iteration has completed
 
-	MPI_Barrier(MPI_COMM_WORLD);
+	////MPI_Barrier(MPI_COMM_WORLD);
 
 	// begin = MPI_Wtime(); // starting local timer
 
@@ -244,7 +244,7 @@ while (complete == 0){
     } 
 
     // end = MPI_Wtime(); // ending local timer
-	MPI_Barrier(MPI_COMM_WORLD); // blocks until all processes have reached this end
+	////MPI_Barrier(MPI_COMM_WORLD); // blocks until all processes have reached this end
 	// start = MPI_Wtime(); // starting clock
 	MPI_Allreduce(new_x, new_x_sum, num, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
 	MPI_Allreduce(&local_complete, &complete, 1, MPI_INT, MPI_PROD, MPI_COMM_WORLD);
@@ -255,7 +255,7 @@ while (complete == 0){
 		x[i] = new_x_sum[i];
 	}
 
-	MPI_Barrier(MPI_COMM_WORLD);
+	////MPI_Barrier(MPI_COMM_WORLD);
 
 }
 
