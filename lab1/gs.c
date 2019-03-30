@@ -246,7 +246,7 @@ while (complete == 0){
 	MPI_Barrier(MPI_COMM_WORLD); // blocks until all processes have reached this end
 	// start = MPI_Wtime(); // starting clock
 	MPI_Allreduce(new_x, new_x_sum, num, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
-	MPI_Allreduce(&local_complete, &complete, 1 MPI_INT, MPI_PROD, MPI_COMM_WORLD);
+	MPI_Allreduce(&local_complete, &complete, 1, MPI_INT, MPI_PROD, MPI_COMM_WORLD);
 	// finish = MPI_Wtime(); // end timer
 	// overhead += finish - start;
 
