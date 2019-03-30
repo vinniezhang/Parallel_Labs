@@ -200,6 +200,7 @@ int main(int argc, char *argv[])
  int quotient = num / comm_sz; // unknowns / processes
  int remainder = num % comm_sz;
 
+// declaration of variables used to keep track of time
 // double start, finish; // local start and finish times of processes
 // double overhead = 0; // for tracking overhead time
 // double begin, end; // used to calculate overhead time
