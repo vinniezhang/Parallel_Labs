@@ -230,14 +230,14 @@ while (complete == 0){
 
       	new_x[i] /= a[i][i];
      
-         if ((new_x[i] - x[i]) / new_x[i] > err)
-           local_complete = 0;
+		if ((new_x[i] - x[i]) / new_x[i] > err)
+			local_complete = 0;
 
        //printf("new_x[%d] = %f\n", i, new_x[i]);
     } 
 
     /* using mpi_allreduce to combine values from all processes and
-    distribute the results back to all of the processes */
+    distribute the results back to all of them */
 	MPI_Allreduce(new_x, new_x_sum, num, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
 	MPI_Allreduce(&local_complete, &complete, 1, MPI_INT, MPI_PROD, MPI_COMM_WORLD);
 
