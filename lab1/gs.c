@@ -200,11 +200,6 @@ int main(int argc, char *argv[])
  int quotient = num / comm_sz; // unknowns / processes
  int remainder = num % comm_sz;
 
-// declaration of variables used to keep track of time
-// double start, finish; // local start and finish times of processes
-// double overhead = 0; // for tracking overhead time
-// double begin, end; // used to calculate overhead time
-
  if (my_rank < remainder) {
  	count = quotient++;
  	first_index = my_rank*count;
@@ -222,8 +217,6 @@ while (complete == 0){
 
 	nit += 1; // iteration count increments
 	local_complete = 1; // an iteration has completed
-
-	// begin = MPI_Wtime(); // starting local timer
 
 	// implementation of the matrices into C code
 	for (int i = first_index; i < last_index; i++)
@@ -243,12 +236,10 @@ while (complete == 0){
        //printf("new_x[%d] = %f\n", i, new_x[i]);
     } 
 
-    // end = MPI_Wtime(); // ending timer
-	// start = MPI_Wtime(); // starting local timer
+    /* using mpi_allreduce to combine values from all processes and
+    distribute the results back to all of the processes */
 	MPI_Allreduce(new_x, new_x_sum, num, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
 	MPI_Allreduce(&local_complete, &complete, 1, MPI_INT, MPI_PROD, MPI_COMM_WORLD);
-	// finish = MPI_Wtime(); // end local timer
-	// overhead += finish - start;
 
 	for (i = 0; i < num; i++){
 		x[i] = new_x_sum[i];
@@ -273,7 +264,7 @@ while (complete == 0){
  
  fclose(fp);
 
- MPI_Finalize();
+ MPI_Finalize(); // terminating mpi environment
  
  exit(0);
 
