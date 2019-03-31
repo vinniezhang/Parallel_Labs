@@ -177,18 +177,18 @@ int main(int argc, char *argv[])
   */
  check_matrix();
 
- float *new_x;
- float *new_x_sum; // array of all of the x values?
+ float *new_x; // array of x values
+ float *new_x_sum; // array of x values sum
  int complete = 0; // to indicate if the rel error is <= given rel error
  int local_complete; // indicates completion of processes
 
 // initiating arrays 
- new_x = (float *) calloc(num, sizeof(float));
- new_x_sum = (float *) malloc(num * sizeof(float));
+ new_x = (float *) calloc(num, sizeof(float)); // initializes array with 0 values
+ new_x_sum = (float *) malloc(num * sizeof(float)); // doesn't initialize with values
 
  int comm_sz; // number of processes in the group
- int my_rank; // rank of current process
- int count;
+ int my_rank; // process rank
+ int count; // num of unknowns given to each process 
  int first_index; // of current process
  int last_index; // of current porcess
  
@@ -223,8 +223,6 @@ while (complete == 0){
 	nit += 1; // iteration count increments
 	local_complete = 1; // an iteration has completed
 
-	////MPI_Barrier(MPI_COMM_WORLD);
-
 	// begin = MPI_Wtime(); // starting local timer
 
 	// implementation of the matrices into C code
@@ -241,21 +239,20 @@ while (complete == 0){
      
          if ((new_x[i] - x[i]) / new_x[i] > err)
            local_complete = 0;
+
+       printf("new_x[%d] = %f\n", i, new_x[i]);
     } 
 
-    // end = MPI_Wtime(); // ending local timer
-	////MPI_Barrier(MPI_COMM_WORLD); // blocks until all processes have reached this end
-	// start = MPI_Wtime(); // starting clock
+    // end = MPI_Wtime(); // ending timer
+	// start = MPI_Wtime(); // starting local timer
 	MPI_Allreduce(new_x, new_x_sum, num, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
 	MPI_Allreduce(&local_complete, &complete, 1, MPI_INT, MPI_PROD, MPI_COMM_WORLD);
-	// finish = MPI_Wtime(); // end timer
+	// finish = MPI_Wtime(); // end local timer
 	// overhead += finish - start;
 
 	for (i = 0; i < num; i++){
 		x[i] = new_x_sum[i];
 	}
-
-	////MPI_Barrier(MPI_COMM_WORLD);
 
 }
 
