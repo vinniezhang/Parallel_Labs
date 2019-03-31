@@ -240,7 +240,7 @@ while (complete == 0){
          if ((new_x[i] - x[i]) / new_x[i] > err)
            local_complete = 0;
 
-       printf("new_x[%d] = %f\n", i, new_x[i]);
+       //printf("new_x[%d] = %f\n", i, new_x[i]);
     } 
 
     // end = MPI_Wtime(); // ending timer
