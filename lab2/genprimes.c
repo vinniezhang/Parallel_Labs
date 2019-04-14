@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
 	char *t = argv[2]; // number of threads and is a positive int <= 100
 	int num = atoi(N); // converting from string to int
 	int thread = atoi(t); // converting from string to int
-	int stop = (num + 1) / 2;
+	int stop = (num + 1) / 2; // number to stop at (right before the last specified prime number)
 
 	// instantiating variables
 	int primes[num - 1]; // array of prime numbers
@@ -53,6 +53,7 @@ int main(int argc, char *argv[]) {
 	FILE *fp;
 	sprintf(output,"%d.txt",num);
 	fp = fopen (output, "w");
+	
 	int previous_prime = 2;
 	int index = 1;
 
