@@ -17,30 +17,29 @@ int main(int argc, char *argv[]) {
 	int stop = (num + 1) / 2;
 
 	// instantiating variables
-	int prime[num - 1];
+	int primes[num - 1]; // array of prime numbers
 	double time_start = 0.0, time_taken;
-
 	time_start = omp_get_wtime();
 
-	#pragma omp parallel num_threads (thread)
+	#pragma omp parallel num_threads (thread) // parallelizing processes
 	{
 
 		#pragma omp for
 		for (int i = 2; i <= num; i++) {
-			prime[i-2] = i;
+			primes[i-2] = i;
 		}
 
 		#pragma omp for 
 		for (int j = 2; j <= stop; j++) {
 			
-			if (prime[j-2] == 0) {
+			if (primes[j-2] == 0) {
 				continue;
 			
 			}
 
 			for (int k = j-1; k < num-1; k++) {
-				if (prime[k] % j == 0) {
-					prime[k] = 0;
+				if (primes[k] % j == 0) {
+					primes[k] = 0;
 				}
 			}
 		}	
@@ -57,11 +56,11 @@ int main(int argc, char *argv[]) {
 
 	for (int k = 0; k < num-1; k++) {
 
-		if (prime[k] != 0) {
+		if (primes[k] != 0) {
 
-			fprintf(fp, "%d, %d, %d\n", index, prime[k], prime[k]-previous_prime);
+			fprintf(fp, "%d, %d, %d\n", index, primes[k], primes[k]-previous_prime);
 			index += 1;
-			previous_prime = prime[k];
+			previous_prime = primes[k];
 		}
 	}
 
