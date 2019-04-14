@@ -18,8 +18,8 @@ int main(int argc, char *argv[]) {
 
 	// instantiating variables
 	int primes[num - 1]; // array of prime numbers
-	double time_start = 0.0, time_taken;
-	time_start = omp_get_wtime();
+	double tstart = 0.0, ttaken;
+	tstart = omp_get_wtime();
 	char output[100] =""; // for outputting result
 
 	#pragma omp parallel num_threads (thread) // parallelizing processes
@@ -46,14 +46,14 @@ int main(int argc, char *argv[]) {
 		}	
 	}
 
-	time_taken = omp_get_wtime() - time_start; // calculating time elapsed from start
-	printf("Time take for the main part: %f\n", time_taken); // printing time elapsed
+	ttaken = omp_get_wtime() - tstart; // calculating time elapsed from start
+	printf("Time take for the main part: %f\n", ttaken); // printing time elapsed
 
 	// writing results to file
 	FILE *fp;
 	sprintf(output,"%d.txt",num);
 	fp = fopen (output, "w");
-	
+
 	int previous_prime = 2;
 	int index = 1;
 
