@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
 
 	// writing results to file
 	FILE *fp;
-	sprintf(output,"%d.txt",N);
+	sprintf(output,"%d.txt",num);
 	fp = fopen (output, "w");
 	int previous_prime = 2;
 	int index = 1;
