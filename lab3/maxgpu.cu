@@ -8,7 +8,7 @@
 
 
 __global__ // to perform kernel function --> must be void
-void getmaxcu(unsigned int numbers_all, unsigned int result_all, int size){
+void getmaxcu(unsigned int* numbers_all, unsigned int* result_all, int size){
   
   int i = 0;
   i = threadIdx.x + blockDim.x * blockIdx.x; // 1D grid of 1D blocks
