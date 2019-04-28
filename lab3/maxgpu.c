@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <cuda.h>
 
 unsigned int getmax(unsigned int *, unsigned int);
 
