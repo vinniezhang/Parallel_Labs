@@ -58,9 +58,9 @@ int main(int argc, char *argv[])
     unsigned int * result_all;
 
     // transfer m and n to device memory
-    cudaMalloc((void**)&numbers_all, size*sizeof(unsigned int));
+    cudaMalloc((void **)&numbers_all, size*sizeof(unsigned int));
     cudaMemcpy(numbers_all, numbers, size*sizeof(unsigned int), cudaMemcpyHostToDevice);
-    cudaMalloc((void**)&result_all, sizeof(unsigned int));
+    cudaMalloc((void **)&result_all, sizeof(unsigned int));
     cudaMemcpy(result_all, result, sizeof(unsigned int), cudaMemcpyHostToDevice);
 
     // getter and setter props
