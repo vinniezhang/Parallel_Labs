@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
     unsigned int * result;
     result = (unsigned int*)malloc(sizeof(unsigned int));
-    result[0]; // this is where the array max will be stored in
+    result[0] = 0; // this is where the array max will be stored in
     
     if(argc !=2)
     {
