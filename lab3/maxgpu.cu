@@ -69,7 +69,8 @@ int main(int argc, char *argv[])
     int block_num = (int)ceil(size/(double)thread_num);
 
     getmaxcu<<<block_num, thread_num>>>(numbers_all, result_all, size); // calling the kernel here
-    cudaMemcpy(result, result_all, sizeof(unsigned int), cudaMemcpyHostToDevice); // transfering from device to host
+   
+    cudaMemcpy(result, result_all, sizeof(unsigned int), cudaMemcpyDeviceToHost); // transfering from device to host
    
     // freeing the device memory!!!
     cudaFree(numbers_all);
