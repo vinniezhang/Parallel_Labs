@@ -7,32 +7,38 @@
 #include <cuda.h>
 
 
-__global__ // to perform kernel function --> must be void
-void getmaxcu(unsigned int* numbers_all, unsigned int* result_all, int size){
+__global__ // to perform kernel function (called from host code, executed on device) --> must be void
+void getmaxcu(unsigned int* numbers_device, unsigned int* result_device, int array_size){ 
+// numbers_device and result_device (first two params) point to device memory
   
   int i = 0;
-  i = threadIdx.x + blockDim.x * blockIdx.x; // 1D grid of 1D blocks
+
+  // 1D grid of 1D blocks of 1D threads --> threads form blocks form grid
+  i = threadIdx.x + blockDim.x * blockIdx.x; 
+
+  // blockDim.x used for threads per block
   
-  if (i < size){
+  if (i < array_size){ // we don't want to exceed array size
     // reads the word old located in first param in global/shared memory, 
     // computes the max of old and value (second param), and stores the result 
     // back to memory at the same address (3 operations are performed in one
     // atomic transaction --> returns old)
-    atomicMax((int*)result_all, (int)numbers_all[i]);
+    atomicMax((int*)result_device, (int)numbers_device[i]);
   }
 
 }
 
 int main(int argc, char *argv[])
 {
-    unsigned int size = 0;  // The size of the array
+    unsigned int array_size = 0;  // size of the array
     unsigned int i;  // loop index
     unsigned int * numbers; // pointer to the array
-
-    unsigned int * result;
-    result = (unsigned int*)malloc(sizeof(unsigned int));
-    result[0] = 0; // this is where the array max will be stored in
     
+    unsigned int * result;
+    result = (unsigned int*)malloc(sizeof(unsigned int)); // allocate space for host copies
+    result[0] = 0; // this is the index where the array max will be stored in
+    
+    // given to us in sequential code file
     if(argc !=2)
     {
        printf("usage: maxseq num\n");
@@ -40,44 +46,49 @@ int main(int argc, char *argv[])
        exit(1);
     }
    
-    size = atol(argv[1]);
+    array_size = atol(argv[1]); // converts string to a long int
 
-    numbers = (unsigned int *)malloc(size * sizeof(unsigned int));
+    numbers = (unsigned int *)malloc(array_size * sizeof(unsigned int));
     if( !numbers )
     {
-       printf("Unable to allocate mem for an array of size %u\n", size);
+       printf("Unable to allocate mem for an array of size %u\n", array_size);
        exit(1);
     }    
 
     srand(time(NULL)); // setting a seed for the random number generator
+    
     // Fill-up the array with random numbers from 0 to size-1 
-    for(i = 0; i < size; i++)
-       numbers[i] = rand()  % size;    
+    for(i = 0; i < array_size; i++){
+       numbers[i] = rand() % array_size;    
+    }
 
-    // this is where we're going to allocate and then copy over memory
-    unsigned int * numbers_all;
-    unsigned int * result_all;
+    // this is where the parallelizing comes in
+    // we're going to allocate and then copy over memory
+    unsigned int * numbers_device; 
+    unsigned int * result_device;
 
-    // transfer m and n to device memory
-    cudaMalloc((void **)&numbers_all, size*sizeof(unsigned int));
-    cudaMemcpy(numbers_all, numbers, size*sizeof(unsigned int), cudaMemcpyHostToDevice);
-    cudaMalloc((void **)&result_all, sizeof(unsigned int));
-    cudaMemcpy(result_all, result, sizeof(unsigned int), cudaMemcpyHostToDevice);
+    // transfer m and n to device memory and allocating space for device copies
+    cudaMalloc((void **)&numbers_device, array_size*sizeof(unsigned int)); // allocating space for device copies in global memory
+    cudaMemcpy(numbers_device, numbers, array_size*sizeof(unsigned int), cudaMemcpyHostToDevice); // copy input to device
+    
+    cudaMalloc((void **)&result_device, sizeof(unsigned int)); // allocating space for device copies in global memory
+    cudaMemcpy(result_device, result, sizeof(unsigned int), cudaMemcpyHostToDevice); // copy result BACK to host
 
-    // getter and setter props
-    int thread_num = 1024;
-    int block_num = (int)ceil(size/(double)thread_num);
+    // setting up input values
+    int thread_num = 1024; // cims servers allow for this amount
+    int block_num = (int)ceil(array_size/(double)thread_num); // 32
 
-    getmaxcu<<<block_num, thread_num>>>(numbers_all, result_all, size); // calling the kernel here
+    // call from host code to device code (aka kernal launch)
+    getmaxcu<<<block_num, thread_num>>>(numbers_device, result_device, array_size);
+    
+    // thhis is where we copy the result back to host (from device) 
+    cudaMemcpy(result, result_device, sizeof(unsigned int), cudaMemcpyDeviceToHost);
    
-    cudaMemcpy(result, result_all, sizeof(unsigned int), cudaMemcpyDeviceToHost); // transfering from device to host
-   
-    // freeing the device memory!!!
-    cudaFree(numbers_all);
-    cudaFree(result_all);
-
-    printf("The maximum number in the array is: %u\n", result[0]);
-
+    // cleaning and freeing up the device memory!!!
+    cudaFree(numbers_device);
+    cudaFree(result_device);
     free(numbers);
+
+    printf("The maximum number in the array is: %u\n", result[0]); // print statement
     exit(0);
 }
