@@ -31,7 +31,7 @@ __global__ void getmaxcu(unsigned int* numbers_device, unsigned int* result_devi
 
 int main(int argc, char *argv[])
 {
-    unsigned int array_size = 0;  // size of the array
+    unsigned int array_size;  // size of the array
     unsigned int i;  // loop index
     unsigned int * numbers; // pointer to the array
     
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
     int block_num = 32; // (int)ceil(array_size/(double)thread_num);
     int thread_num = 1024; // cims servers allow for this amount
     
-    // call from host code to device code (aka kernal launch)
+    // call from host code to device code (aka kernal launch!!)
     getmaxcu<<<block_num, thread_num>>>(numbers_device, result_device, array_size);
     
     // this is where we copy the result back to host (from device) 
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
     cudaFree(numbers_device);
     cudaFree(result_device);
 
-    printf("The maximum number in the array is: %u\n", result[0]); // print statement
+    printf("The maximum number in the array is: %u\n", result[0]); // print statement, retrieving max value in array
     exit(0);
 
 }
