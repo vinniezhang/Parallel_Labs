@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
     // Fill-up the array with random numbers from 0 to size-1 
     for(i = 0; i < array_size; i++){
        numbers[i] = rand() % array_size;    
+       printf(numbers[i]);
     }
 
     // this is where the parallelizing comes in
