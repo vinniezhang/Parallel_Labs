@@ -7,14 +7,14 @@
 #include <cuda.h>
 
 
-__global__ // to perform kernel function (called from host code, executed on device) --> must be void
-void getmaxcu(unsigned int* numbers_device, unsigned int* result_device, int array_size){ 
+// to perform kernel function (called from host code, executed on device) --> must be void
+__global__ void getmaxcu(unsigned int* numbers_device, unsigned int* result_device, int array_size){ 
 // numbers_device and result_device (first two params) point to device memory
   
-  int i = 0;
+ // int i = 0;
 
   // 1D grid of 1D blocks of 1D threads --> threads form blocks form grid
-  i =   blockIdx.x * blockDim.x + threadIdx.x; 
+  int i =   blockIdx.x * blockDim.x + threadIdx.x; 
 
   // blockDim.x used for threads per block
   
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 
     // setting up input values
     int thread_num = 1024; // cims servers allow for this amount
-    int block_num = (int)ceil(array_size/(double)thread_num); // 32
+    int block_num = 32//(int)ceil(array_size/(double)thread_num); // 32
 
     // call from host code to device code (aka kernal launch)
     getmaxcu<<<block_num, thread_num>>>(numbers_device, result_device, array_size);
@@ -85,9 +85,9 @@ int main(int argc, char *argv[])
     cudaMemcpy(result, result_device, sizeof(unsigned int), cudaMemcpyDeviceToHost);
    
     // cleaning and freeing up the device memory!!!
+    free(numbers);
     cudaFree(numbers_device);
     cudaFree(result_device);
-    free(numbers);
 
     printf("The maximum number in the array is: %u\n", result[0]); // print statement
     exit(0);
