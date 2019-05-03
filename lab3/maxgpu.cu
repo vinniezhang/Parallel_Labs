@@ -18,10 +18,12 @@ __global__ void getmaxcu(unsigned int* numbers_device, unsigned int* result_devi
   
   if (i < array_size){ 
     // we don't want to exceed array size
+
     // reads the word old located in first param in global/shared memory, 
-    // computes the max of old and value (second param), and stores the result 
-    // back to memory at the same address (3 operations are performed in one
-    // atomic transaction --> returns old)
+    // computes the max between the first and second param, and stores the result 
+    // back to memory at the same address (first param) 
+    // (3 operations are performed in one atomic transaction --> returns the max value, stored 
+    // in first parameter)
     atomicMax((int*)result_device, (int)numbers_device[i]);
   }
 
