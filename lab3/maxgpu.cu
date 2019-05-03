@@ -7,27 +7,6 @@
 #include <cuda.h>
 
 
-__global__ // to perform kernel function (called from host code, executed on device) --> must be void
-void getmaxcu(unsigned int* numbers_device, unsigned int* result_device, int array_size){ 
-// numbers_device and result_device (first two params) point to device memory
-  
-  int i = 0;
-
-  // 1D grid of 1D blocks of 1D threads --> threads form blocks form grid
-  i = threadIdx.x + blockDim.x * blockIdx.x; 
-
-  // blockDim.x used for threads per block
-  
-  if (i < array_size){ // we don't want to exceed array size
-    // reads the word old located in first param in global/shared memory, 
-    // computes the max of old and value (second param), and stores the result 
-    // back to memory at the same address (3 operations are performed in one
-    // atomic transaction --> returns old)
-    atomicMax((int*)result_device, (int)numbers_device[i]);
-  }
-
-}
-
 int main(int argc, char *argv[])
 {
     unsigned int array_size = 0;  // size of the array
@@ -36,7 +15,7 @@ int main(int argc, char *argv[])
     
     unsigned int * result;
     result = (unsigned int*)malloc(sizeof(unsigned int)); // allocate space for host copies
-    result[0] = 0; // this is the index where the array max will be stored in
+    result[0] = 0; // this is the index where the array max will be stored in --> is this correct?
     
     // given to us in sequential code file
     if(argc !=2)
@@ -49,8 +28,7 @@ int main(int argc, char *argv[])
     array_size = atol(argv[1]); // converts string to a long int
 
     numbers = (unsigned int *)malloc(array_size * sizeof(unsigned int));
-    if( !numbers )
-    {
+    if( !numbers ) {
        printf("Unable to allocate mem for an array of size %u\n", array_size);
        exit(1);
     }    
@@ -91,4 +69,26 @@ int main(int argc, char *argv[])
 
     printf("The maximum number in the array is: %u\n", result[0]); // print statement
     exit(0);
+}
+
+__global__ // to perform kernel function (called from host code, executed on device) --> must be void
+void getmaxcu(unsigned int* numbers_device, unsigned int* result_device, int array_size){ 
+// numbers_device and result_device (first two params) point to device memory
+  
+  int i = 0;
+
+  // 1D grid of 1D blocks of 1D threads --> threads form blocks form grid
+  i =   blockIdx.x * blockDim.x + threadIdx.x; 
+
+  // blockDim.x used for threads per block
+  
+  if (i < array_size){ 
+    // we don't want to exceed array size
+    // reads the word old located in first param in global/shared memory, 
+    // computes the max of old and value (second param), and stores the result 
+    // back to memory at the same address (3 operations are performed in one
+    // atomic transaction --> returns old)
+    atomicMax((int*)result_device, (int)numbers_device[i]);
+  }
+
 }
