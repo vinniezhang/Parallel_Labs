@@ -29,6 +29,7 @@ __global__ void getmaxcu(unsigned int* numbers_device, unsigned int* result_devi
 
 }
 
+// this is a less efficient way to retrieve max of array??
 // __global__ void getmaxcu(unsigned int* numbers_device, unsigned int array_size)
 // {
 //     int i = blockIdx.x * blockDim.x + threadIdx.x;
