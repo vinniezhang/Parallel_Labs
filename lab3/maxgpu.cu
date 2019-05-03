@@ -73,8 +73,9 @@ int main(int argc, char *argv[])
     cudaMemcpy(result_device, result, sizeof(unsigned int), cudaMemcpyHostToDevice); // copy result BACK to host
 
     // setting up input values
-    int thread_num = 1024; // cims servers allow for this amount
     int block_num = 32; // (int)ceil(array_size/(double)thread_num);
+    int thread_num = 1024; // cims servers allow for this amount
+    
 
     // call from host code to device code (aka kernal launch)
     getmaxcu<<<block_num, thread_num>>>(numbers_device, result_device, array_size);
@@ -89,5 +90,5 @@ int main(int argc, char *argv[])
 
     printf("The maximum number in the array is: %u\n", result[0]); // print statement
     exit(0);
-    
+
 }
