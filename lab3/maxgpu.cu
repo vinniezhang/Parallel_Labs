@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
     
     unsigned int * result;
     result = (unsigned int*)malloc(sizeof(unsigned int)); // allocate space for host copies
-    result[0] = 0; // this is the index where the array max will be stored in --> is this correct?
+    result[0] = 0; // this is the index where the max will be stored in --> is this correct?
     
     // given to us in sequential code file
     if(argc !=2)
@@ -57,8 +57,9 @@ int main(int argc, char *argv[])
     
     // Fill-up the array with random numbers from 0 to size-1 
     for(i = 0; i < array_size; i++){
-       numbers[i] = rand() % array_size;    
-       printf("%d",numbers[i]);
+       numbers[i] = rand() % array_size; 
+       printf("%d", "array size: " + array_size);   
+       printf("%d", numbers[i]);
        printf("\n");
     }
 
@@ -78,7 +79,6 @@ int main(int argc, char *argv[])
     int block_num = 32; // (int)ceil(array_size/(double)thread_num);
     int thread_num = 1024; // cims servers allow for this amount
     
-
     // call from host code to device code (aka kernal launch)
     getmaxcu<<<block_num, thread_num>>>(numbers_device, result_device, array_size);
     
