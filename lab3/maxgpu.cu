@@ -7,6 +7,28 @@
 #include <cuda.h>
 
 
+__global__ // to perform kernel function (called from host code, executed on device) --> must be void
+void getmaxcu(unsigned int* numbers_device, unsigned int* result_device, int array_size){ 
+// numbers_device and result_device (first two params) point to device memory
+  
+  int i = 0;
+
+  // 1D grid of 1D blocks of 1D threads --> threads form blocks form grid
+  i =   blockIdx.x * blockDim.x + threadIdx.x; 
+
+  // blockDim.x used for threads per block
+  
+  if (i < array_size){ 
+    // we don't want to exceed array size
+    // reads the word old located in first param in global/shared memory, 
+    // computes the max of old and value (second param), and stores the result 
+    // back to memory at the same address (3 operations are performed in one
+    // atomic transaction --> returns old)
+    atomicMax((int*)result_device, (int)numbers_device[i]);
+  }
+
+}
+
 int main(int argc, char *argv[])
 {
     unsigned int array_size = 0;  // size of the array
@@ -69,26 +91,4 @@ int main(int argc, char *argv[])
 
     printf("The maximum number in the array is: %u\n", result[0]); // print statement
     exit(0);
-}
-
-__global__ // to perform kernel function (called from host code, executed on device) --> must be void
-void getmaxcu(unsigned int* numbers_device, unsigned int* result_device, int array_size){ 
-// numbers_device and result_device (first two params) point to device memory
-  
-  int i = 0;
-
-  // 1D grid of 1D blocks of 1D threads --> threads form blocks form grid
-  i =   blockIdx.x * blockDim.x + threadIdx.x; 
-
-  // blockDim.x used for threads per block
-  
-  if (i < array_size){ 
-    // we don't want to exceed array size
-    // reads the word old located in first param in global/shared memory, 
-    // computes the max of old and value (second param), and stores the result 
-    // back to memory at the same address (3 operations are performed in one
-    // atomic transaction --> returns old)
-    atomicMax((int*)result_device, (int)numbers_device[i]);
-  }
-
 }
