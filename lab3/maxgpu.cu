@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
     getmaxcu<<<block_num, thread_num>>>(numbers_device, result_device, array_size);
     
     // this is where we copy the result back to host (from device) 
-    cudaMemcpy(result, result_device, sizeof(unsigned int), cudaMemcpyDeviceToHost);
+    cudaMemcpy(final, result_device, sizeof(unsigned int), cudaMemcpyDeviceToHost);
    
     // cleaning and freeing up the device memory!!!
     free(numbers);
