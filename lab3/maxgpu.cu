@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     unsigned int i;  // loop index
     unsigned int * numbers; // pointer to the array
     
-    unsigned int * result;
+    unsigned int * final;
     final = (unsigned int*)malloc(sizeof(unsigned int)); // allocate space for host copies
     final[0] = 0; // this is the index where the max will be stored in --> is this correct?
     
