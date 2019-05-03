@@ -11,8 +11,6 @@
 __global__ void getmaxcu(unsigned int* numbers_device, unsigned int* result_device, int array_size){ 
 // numbers_device and result_device (first two params) point to device memory
   
- // int i = 0;
-
   // 1D grid of 1D blocks of 1D threads --> threads form blocks form grid
   int i =   blockIdx.x * blockDim.x + threadIdx.x; 
 
@@ -76,12 +74,12 @@ int main(int argc, char *argv[])
 
     // setting up input values
     int thread_num = 1024; // cims servers allow for this amount
-    int block_num = 32;//(int)ceil(array_size/(double)thread_num); // 32
+    int block_num = 32; // (int)ceil(array_size/(double)thread_num);
 
     // call from host code to device code (aka kernal launch)
     getmaxcu<<<block_num, thread_num>>>(numbers_device, result_device, array_size);
     
-    // thhis is where we copy the result back to host (from device) 
+    // this is where we copy the result back to host (from device) 
     cudaMemcpy(result, result_device, sizeof(unsigned int), cudaMemcpyDeviceToHost);
    
     // cleaning and freeing up the device memory!!!
@@ -91,4 +89,5 @@ int main(int argc, char *argv[])
 
     printf("The maximum number in the array is: %u\n", result[0]); // print statement
     exit(0);
+    
 }
