@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 
     // setting up input values
     int thread_num = 1024; // cims servers allow for this amount
-    int block_num = 32//(int)ceil(array_size/(double)thread_num); // 32
+    int block_num = 32;//(int)ceil(array_size/(double)thread_num); // 32
 
     // call from host code to device code (aka kernal launch)
     getmaxcu<<<block_num, thread_num>>>(numbers_device, result_device, array_size);
