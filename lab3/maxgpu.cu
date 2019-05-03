@@ -48,8 +48,8 @@ int main(int argc, char *argv[])
     unsigned int * numbers; // pointer to the array
     
     unsigned int * result;
-    result = (unsigned int*)malloc(sizeof(unsigned int)); // allocate space for host copies
-    result[0] = 0; // this is the index where the max will be stored in --> is this correct?
+    final = (unsigned int*)malloc(sizeof(unsigned int)); // allocate space for host copies
+    final[0] = 0; // this is the index where the max will be stored in --> is this correct?
     
     // given to us in sequential code file
     if(argc !=2)
@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
     cudaMemcpy(numbers_device, numbers, array_size*sizeof(unsigned int), cudaMemcpyHostToDevice); // copy input to device
     
     cudaMalloc((void **)&result_device, sizeof(unsigned int)); // allocating space for device copies in global memory
-    cudaMemcpy(result_device, result, sizeof(unsigned int), cudaMemcpyHostToDevice); // copy result BACK to host
+    cudaMemcpy(result_device, final, sizeof(unsigned int), cudaMemcpyHostToDevice); // copy result BACK to host
 
     // setting up input values
     int block_num = 32; // (int)ceil(array_size/(double)thread_num);
@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
     cudaFree(numbers_device);
     cudaFree(result_device);
 
-    printf("The maximum number in the array is: %u\n", result[0]); // print statement, retrieving max value in array
+    printf("The maximum number in the array is: %u\n", final[0]); // print statement, retrieving max value in array
     exit(0);
 
 }
