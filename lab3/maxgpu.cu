@@ -29,6 +29,17 @@ __global__ void getmaxcu(unsigned int* numbers_device, unsigned int* result_devi
 
 }
 
+// __global__ void getmaxcu(unsigned int* numbers_device, unsigned int array_size)
+// {
+//     int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+//     for (i = 0; i < size; ++i)
+//     {
+//         if (numbers_device[i] > numbers_device[0])
+//             numbers_device[0] = numbers_device[i];
+//     }
+// }
+
 int main(int argc, char *argv[])
 {
     unsigned int array_size;  // size of the array
